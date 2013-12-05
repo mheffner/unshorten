@@ -20,10 +20,16 @@ before do
   content_type 'application/json'
 end
 
+helpers do
+  def unshort_apikey
+    ENV['UNSHORT_API_KEY']
+  end
+end
+
 get "/unshorten" do
   shorturl = params[:url]
 
-  uri = URI("http://api.unshort.me/unshorten/v2/?format=json&r=" + shorturl)
+  uri = URI("http://api.unshort.me/unshorten/v2/?format=json&api_key=#{unshort_api_key}&r=" + shorturl)
 
   res = Net::HTTP.get_response(uri)
 
