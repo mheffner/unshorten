@@ -28,8 +28,8 @@ get "/unshorten" do
   res = Net::HTTP.get_response(uri)
 
   if res.is_a?(Net::HTTPSuccess)
-    res.body
+    halt 200, res.body
   else
-    "{[\"error\"]}"
+    halt 500, "{\"error\" : \"#{res.body}\"}"
   end
 end
