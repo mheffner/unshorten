@@ -1,5 +1,7 @@
 require "sinatra"
 
+require 'net/http'
+
 enable :sessions
 set :raise_errors, false
 set :show_exceptions, false
@@ -14,5 +16,20 @@ use Rack::Cors, :logger => Logger.new(dev_null) do
   end
 end
 
+before do
+  content_type 'application/json'
+end
+
 get "/unshorten" do
+  shorturl = params[:url]
+
+  uri = URI("http://api.unshort.me/unshorten/v2/?format=json&r=" + shorturl)
+
+  res = Net::HTTP.get_response(uri)
+
+  if res.is_a?(Net::HTTPSuccess)
+    res.body
+  else
+    "{[\"error\"]}"
+  end
 end
