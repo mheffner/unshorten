@@ -21,7 +21,7 @@ before do
 end
 
 helpers do
-  def unshort_apikey
+  def unshort_api_key
     ENV['UNSHORT_API_KEY']
   end
 end
