@@ -2,6 +2,8 @@ require "sinatra"
 
 require 'net/http'
 
+require 'json'
+
 enable :sessions
 set :raise_errors, false
 set :show_exceptions, false
@@ -29,13 +31,10 @@ end
 get "/unshorten" do
   shorturl = params[:url]
 
-  uri = URI("http://api.unshort.me/unshorten/v2/?format=json&api_key=#{unshort_api_key}&r=" + shorturl)
-
-  res = Net::HTTP.get_response(uri)
-
-  if res.is_a?(Net::HTTPSuccess)
-    halt 200, res.body
+  long = Unshorten[shorturl] rescue nil
+  if long
+    halt 200, {:requestedURL => shorturl, :resolvedURL => long}.to_json
   else
-    halt 500, "{\"error\" : \"#{res.body}\"}"
+    halt 500, "{\"error\" : \"failed\"}"
   end
 end
